@@ -2,14 +2,9 @@ import competition_utilities as cu
 import csv
 import datetime
 import features
-import ml_metrics as metrics
-import nltk
-from nltk.text import FreqDist
 import numpy as np
 import pandas as pd
 import re
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction.text import CountVectorizer
 
 def camel_to_underscores(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
