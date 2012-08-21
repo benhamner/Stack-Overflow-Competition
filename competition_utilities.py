@@ -72,6 +72,6 @@ def cap_predictions(probs, epsilon):
     probs = probs / row_sums[:, np.newaxis]
     return probs
 
-def save_submission(file_name, predictions):
+def write_submission(file_name, predictions):
     writer = csv.writer(open(os.path.join(submissions_path, file_name), "w"), lineterminator="\n")
     writer.writerows(predictions)
