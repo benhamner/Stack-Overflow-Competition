@@ -37,7 +37,7 @@ def main():
     probs = cu.cap_and_update_priors(old_priors, probs, new_priors, 0.001)
     
     print("Saving submission to %s" % submission_file)
-    cu.save_submission(submission_file, probs)
+    cu.write_submission(submission_file, probs)
 
 if __name__=="__main__":
     main()
