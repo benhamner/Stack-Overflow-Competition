@@ -34,7 +34,7 @@ def main():
     print("Calculating priors and updating posteriors")
     new_priors = cu.get_priors(full_train_file)
     old_priors = cu.get_priors(train_file)
-    probs = cu.cap_and_update_priors(old_priors, probs, true_priors, 0.001)
+    probs = cu.cap_and_update_priors(old_priors, probs, new_priors, 0.001)
     
     print("Saving submission to %s" % submission_file)
     cu.save_submission(submission_file, probs)
