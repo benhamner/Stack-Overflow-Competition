@@ -59,8 +59,8 @@ def update_prior(old_prior,  old_posterior, new_prior):
 
 def cap_and_update_priors(old_priors, old_posteriors, new_priors, epsilon):
     old_posteriors = cap_predictions(old_posteriors, epsilon)
-    old_priors = np.kron(np.ones((np.size(old_posteriors, 1))), old_priors)
-    new_priors = np.kron(np.ones((np.size(old_posteriors, 1))), new_priors)
+    old_priors = np.kron(np.ones((np.size(old_posteriors, 0), 1)), old_priors)
+    new_priors = np.kron(np.ones((np.size(old_posteriors, 0), 1)), new_priors)
     evidence_ratio = (old_priors*(1-old_posteriors)) / (old_posteriors*(1-old_priors))
     new_posteriors = new_priors / (new_priors + (1-new_priors)*evidence_ratio)
     new_posteriors = cap_predictions(new_posteriors, epsilon)
