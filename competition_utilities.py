@@ -2,6 +2,7 @@ from __future__ import division
 from collections import Counter
 import csv
 import dateutil
+import numpy as np
 import os
 import pandas as pd
 
