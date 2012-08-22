@@ -52,6 +52,11 @@ def get_priors(file_name):
     priors = [closed_reason_counts[reason]/total for reason in reasons]
     return priors
 
+def write_sample(file_name, header, sample):
+    writer = csv.writer(open(os.path.join(data_path, file_name), "w"), lineterminator="\n")
+    writer.writerow(header)
+    writer.writerows(sample)
+
 def update_prior(old_prior,  old_posterior, new_prior):
     evidence_ratio = (old_prior*(1-old_posterior)) / (old_posterior*(1-old_prior))
     new_posterior = new_prior / (new_prior + (1-new_prior)*evidence_ratio)
