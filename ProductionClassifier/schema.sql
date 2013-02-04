@@ -1,4 +1,5 @@
 CREATE TABLE questions (
+    id BIGSERIAL,
     post_id BIGINT,
     post_creation_date TIMESTAMP WITH TIME ZONE,
     owner_user_id BIGINT,
