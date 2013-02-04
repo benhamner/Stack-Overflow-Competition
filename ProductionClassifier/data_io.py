@@ -4,10 +4,10 @@ import pandas as pd
 import pickle
 
 status_dict = {"not a real question": 0,
-               "not constructive": 1,
-               "off topic": 2,
-               "open": 3,
-               "too localized": 4}
+               "not constructive": 0,
+               "off topic": 0,
+               "open": 1,
+               "too localized": 0}
 
 def open_status_converter(status):
     return status_dict[status]
@@ -46,3 +46,8 @@ def load_model(file_name):
                            "TrainedModels",
                            file_name)
     return pickle.load(open(in_path))
+
+def get_private_leaderboard_solution_df():
+    pl_path = os.path.join(get_data_path(),
+                           "private_leaderboard_solution.csv")
+    return pd.read_csv(pl_path)

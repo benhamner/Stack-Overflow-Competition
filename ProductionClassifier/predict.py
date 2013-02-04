@@ -1,5 +1,6 @@
 import data_io
-from features import FeatureMapper
+from features import FeatureMapper, SimpleTransform
+import ml_metrics as metrics
 
 def main():
     print("Reading the private leaderboard file")
@@ -10,7 +11,9 @@ def main():
 
     print("Making predictions")
     probs = classifier.predict_proba(test)
-    print(probs)
+
+    solution = data_io.get_private_leaderboard_solution_df()
+    print("Open AUC: %0.6f" % metrics.auc(solution["open"], probs[:,1]))
 
 if __name__=="__main__":
     main()
