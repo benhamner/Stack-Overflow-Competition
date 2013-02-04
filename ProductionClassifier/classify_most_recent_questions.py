@@ -5,7 +5,7 @@ import pandas as pd
 import psycopg2
 import requests
 
-def get_most_recent_questions(num_questions=30):
+def get_most_recent_questions(num_questions=50):
     r = requests.get("http://api.stackexchange.com/2.1/questions?page=1&pagesize=%d&order=desc&sort=activity&site=stackoverflow" % num_questions)
     recent_questions = r.json["items"]
 
@@ -32,8 +32,11 @@ def get_most_recent_questions(num_questions=30):
         num_user_answers = len([answer for answer in user_answers if answer["owner"]["user_id"] == raw_question["owner"]["user_id"]])
         print(num_user_answers)
 
-        owner_creation_date = [user for user in users if user["user_id"] == raw_question["owner"]["user_id"]][0]["creation_date"]
-        body_html = [question for question in questions_w_body if question["question_id"] == raw_question["question_id"]][0]["body"]
+        try:
+            owner_creation_date = [user for user in users if user["user_id"] == raw_question["owner"]["user_id"]][0]["creation_date"]
+            body_html = [question for question in questions_w_body if question["question_id"] == raw_question["question_id"]][0]["body"]
+        except IndexError:
+            continue
 
         raw_question["tags"].extend(["" for x in range(5)])
 
