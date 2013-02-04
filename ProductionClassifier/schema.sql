@@ -1,0 +1,14 @@
+CREATE TABLE Questions (
+    PostId BIGINT,
+    PostCreationDate TIMESTAMP WITH TIME ZONE,
+    OwnerUserId BIGINT,
+    OwnerCreationDate TIMESTAMP WITH TIME ZONE,
+    ReputationAtPostCreation BIGINT,
+    OwnerUndeletedAnswerCountAtPostTime BIGINT,
+    Title CHARACTER VARYING,
+    BodyHtml CHARACTER VARYING,
+    Tag1 CHARACTER VARYING,
+    Tag2 CHARACTER VARYING,
+    Tag3 CHARACTER VARYING,
+    Tag4 CHARACTER VARYING,
+    Tag5 CHARACTER VARYING);

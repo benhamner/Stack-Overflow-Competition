@@ -12,9 +12,9 @@ def get_title(d):
 
 def feature_extractor():
     features = [('Title-Bag of Words', 'Title', CountVectorizer(max_features=400)),
-                ('Body-Bag of Words', 'BodyMarkdown', CountVectorizer(max_features=400)),
+                #('Body-Bag of Words', 'BodyMarkdown', CountVectorizer(max_features=400)),
                 ('Title-Character Count', 'Title', SimpleTransform(len)),
-                ('Body-Character Count', 'BodyMarkdown', SimpleTransform(len)),
+                #('Body-Character Count', 'BodyMarkdown', SimpleTransform(len)),
                 ('OwnerUndeletedAnswerCountAtPostTime', 'OwnerUndeletedAnswerCountAtPostTime', SimpleTransform()),
                 ('ReputationAtPostCreation', 'ReputationAtPostCreation', SimpleTransform())]
     combined = FeatureMapper(features)
@@ -23,9 +23,10 @@ def feature_extractor():
 def get_pipeline():
     features = feature_extractor()
     steps = [("extract_features", features),
-             ("classify", RandomForestClassifier(n_estimators=5, 
+             ("classify", RandomForestClassifier(n_estimators=50, 
                                                  verbose=2,
-                                                 n_jobs=-1      ))]
+                                                 n_jobs=-1,
+                                                 min_samples_split=30))]
     return Pipeline(steps)
 
 def main():
