@@ -65,7 +65,7 @@ def get_most_recent_questions(num_questions=50):
     return data, questions
 
 def copy_to_postgres(questions, prob_open):
-    conn = psycopg2.connect('dbname=stack user=postgres password=sx7%8rBSgB3SPuytB535')
+    conn = psycopg2.connect('dbname=stack user=postgres password=Postgres1234')
     cur = conn.cursor()
 
     for question, prob in zip(questions, prob_open):
@@ -109,7 +109,7 @@ def copy_to_postgres(questions, prob_open):
                     """, question)
     conn.commit()
 
-def main():
+def read_classify_save_loop():
     print("Getting the newest data")
     recent, questions = get_most_recent_questions()
 
@@ -127,6 +127,16 @@ def main():
         print("%s, %f" % (title, prob))
 
     copy_to_postgres(questions, prob_open)
+
+def main():
+    import sched, time
+    s = sched.scheduler(time.time, time.sleep)
+    def do_something(sc): 
+        read_classify_save_loop()
+        sc.enter(120, 1, do_something, (sc,))
+
+    s.enter(120, 1, do_something, (s,))
+    s.run()
 
 if __name__=="__main__":
     main()

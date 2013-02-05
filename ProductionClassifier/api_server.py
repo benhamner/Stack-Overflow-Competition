@@ -5,18 +5,29 @@ import flask.ext.restless
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Postgres1234@/stack'
 db = SQLAlchemy(app)
 
-class TodoItem(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    todo= db.Column(db.Unicode)
-    priority = db.Column(db.SmallInteger)
-    due_date = db.Column(db.Date)
+class Questions(db.Model):
+    id = db.Column(db.BigInteger, primary_key=True)
+    post_id = db.Column(db.BigInteger)
+    post_creation_date = db.Column(db.Date)
+    owner_user_id = db.Column(db.BigInteger)
+    owner_creation_date = db.Column(db.Date)
+    reputation_at_post_creation = db.Column(db.BigInteger)
+    owner_undeleted_answer_count_at_post_time = db.Column(db.BigInteger)
+    title = db.Column(db.BigInteger)
+    body_html = db.Column(db.BigInteger)
+    tag1 = db.Column(db.BigInteger)
+    tag2 = db.Column(db.BigInteger)
+    tag3 = db.Column(db.BigInteger)
+    tag4 = db.Column(db.BigInteger)
+    tag5 = db.Column(db.BigInteger)
+    close_likelihood = db.Column(db.Float)
 
-print(TodoItem.__tablename__)
+print(Questions.__tablename__)
 
 db.create_all()
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(TodoItem, methods=['GET'], results_per_page=1000)
+manager.create_api(Questions, methods=['GET'], results_per_page=1000)
 app.run()
