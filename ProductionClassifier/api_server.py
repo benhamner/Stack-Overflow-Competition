@@ -3,27 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import flask.ext.restless
 
-#from flask import Response
-
-#dir(Response)
-#Response.headers.add('Access-Control-Allow-Origin', '*')
-
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:sx7%8rBSgB3SPuytB535@/stack'
 db = SQLAlchemy(app)
 
 def fix_response(request):
-    print(request)
-    print(dir(request))
-    print(request.headers)
-    print(request.header_list)
-    l = request.header_list
     request.headers.add('Access-Control-Allow-Origin', '*')
     request.headers.add('Access-Control-Max-Age', '21600')
     request.headers.add('Access-Control-Allow-Methods', '')
-    print(l)
-    print(request.header_list)
     return request
 
 app.process_response = fix_response
@@ -44,8 +32,6 @@ class Questions(db.Model):
     tag4 = db.Column(db.BigInteger)
     tag5 = db.Column(db.BigInteger)
     close_likelihood = db.Column(db.Float)
-
-print(Questions.__tablename__)
 
 db.create_all()
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
