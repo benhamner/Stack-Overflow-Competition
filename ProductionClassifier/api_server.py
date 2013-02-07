@@ -3,10 +3,30 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import flask.ext.restless
 
+#from flask import Response
+
+#dir(Response)
+#Response.headers.add('Access-Control-Allow-Origin', '*')
+
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Postgres1234@/stack'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:sx7%8rBSgB3SPuytB535@/stack'
 db = SQLAlchemy(app)
+
+def fix_response(request):
+    print(request)
+    print(dir(request))
+    print(request.headers)
+    print(request.header_list)
+    l = request.header_list
+    request.headers.add('Access-Control-Allow-Origin', '*')
+    request.headers.add('Access-Control-Max-Age', '21600')
+    request.headers.add('Access-Control-Allow-Methods', '')
+    print(l)
+    print(request.header_list)
+    return request
+
+app.process_response = fix_response
 
 class Questions(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
