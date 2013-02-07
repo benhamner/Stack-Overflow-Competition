@@ -64,11 +64,11 @@ def get_most_recent_questions(num_questions=50):
     data = pd.DataFrame(questions_for_conversion_to_df)
     return data, questions
 
-def copy_to_postgres(questions, prob_open):
-    conn = psycopg2.connect('dbname=stack user=postgres password=Postgres1234')
+def copy_to_postgres(questions, prob_closed):
+    conn = psycopg2.connect('dbname=stack user=postgres password=sx7%8rBSgB3SPuytB535')
     cur = conn.cursor()
 
-    for question, prob in zip(questions, prob_open):
+    for question, prob in zip(questions, prob_closed):
         cur.execute("""SELECT COUNT(*)
                        FROM questions
                        WHERE post_id=%(PostId)s""",
@@ -119,14 +119,14 @@ def read_classify_save_loop():
     print("Making predictions")
     probs = classifier.predict_proba(recent)
 
-    prob_open = probs[:,1]
+    prob_closed = 1-probs[:,1]
     titles = [x for x in recent["Title"]]
-    tuples = sorted(zip(titles, prob_open), key=lambda x: x[1])
+    tuples = sorted(zip(titles, prob_closed), key=lambda x: x[1])
 
     for title, prob in tuples:
         print("%s, %f" % (title, prob))
 
-    copy_to_postgres(questions, prob_open)
+    copy_to_postgres(questions, prob_closed)
 
 def main():
     import sched, time
@@ -139,4 +139,4 @@ def main():
     s.run()
 
 if __name__=="__main__":
-    main()
+    read_classify_save_loop()

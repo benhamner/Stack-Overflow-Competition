@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.base import BaseEstimator
+from HTMLParser import HTMLParser
 
 class FeatureMapper:
     def __init__(self, features):
@@ -50,3 +51,17 @@ class SimpleTransform(BaseEstimator):
 
     def transform(self, X, y=None):
         return np.array([self.transformer(x) for x in X], ndmin=2).T
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()

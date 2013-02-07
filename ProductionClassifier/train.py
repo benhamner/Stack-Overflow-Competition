@@ -1,10 +1,11 @@
 import data_io
+from features import FeatureMapper, SimpleTransform
 import numpy as np
+from pagedown import PagedownToHtml
 import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
-from features import FeatureMapper, SimpleTransform
 
 def get_title(d):
     pickle.dump(d, open("d.pickle", "w"))
@@ -12,9 +13,9 @@ def get_title(d):
 
 def feature_extractor():
     features = [('Title-Bag of Words', 'Title', CountVectorizer(max_features=400)),
-                #('Body-Bag of Words', 'BodyMarkdown', CountVectorizer(max_features=400)),
+                ('Body-Bag of Words', 'BodyMarkdown', CountVectorizer(max_features=400)),
                 ('Title-Character Count', 'Title', SimpleTransform(len)),
-                #('Body-Character Count', 'BodyMarkdown', SimpleTransform(len)),
+                ('Body-Character Count', 'BodyMarkdown', SimpleTransform(len)),
                 ('OwnerUndeletedAnswerCountAtPostTime', 'OwnerUndeletedAnswerCountAtPostTime', SimpleTransform()),
                 ('ReputationAtPostCreation', 'ReputationAtPostCreation', SimpleTransform())]
     combined = FeatureMapper(features)
@@ -30,8 +31,12 @@ def get_pipeline():
     return Pipeline(steps)
 
 def main():
+    markdown = PagedownToHtml()
+
     print("Reading in the training data")
     train = data_io.get_train_df()
+    for i in train.index:
+        train["BodyMarkdown"][i] = markdown.convert(train["BodyMarkdown"][i])
 
     print("Extracting features and training")
     classifier = get_pipeline()

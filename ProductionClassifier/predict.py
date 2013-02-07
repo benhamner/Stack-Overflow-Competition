@@ -1,10 +1,15 @@
 import data_io
 from features import FeatureMapper, SimpleTransform
 import ml_metrics as metrics
+from pagedown import PagedownToHtml
 
 def main():
+    markdown = PagedownToHtml()
+
     print("Reading the private leaderboard file")
     test = data_io.get_test_df()
+    for i in test.index:
+        test["BodyMarkdown"][i] = markdown.convert(test["BodyMarkdown"][i])
 
     print("Loading the trained model")
     classifier = data_io.load_model("model.pickle")
