@@ -1,23 +1,44 @@
 import data_io
 from datetime import datetime
 from features import FeatureMapper, SimpleTransform
+import os
 import pandas as pd
 import psycopg2
+import re
 import requests
 
+def connect_to_postgres():
+    db_string = os.environ["DATABASE_URL"]
+    db_info = re.findall(r"postgres://(\S+):(\S+)@(\S+):(\S+)/(\S+)", db_string)[0]
+    db_user, db_pass, db_host, db_port, db_name = db_info
+
+    conn = psycopg2.connect(database=db_name, user=db_user, password=db_pass, host=db_host, port=db_port)
+    return conn
+
 def update_postgres_close_likelihood(question_ids, prob_closed):
-    conn = psycopg2.connect('dbname=stack user=postgres password=sx7%8rBSgB3SPuytB535')
+    print("Making second connection")
+    conn = connect_to_postgres()
+    print("Made second connection")
     cur = conn.cursor()
 
-    for question_id, prob in zip(question_ids, prob_closed):
-        cur.execute("""UPDATE questions
+    print("Got cursor")
+
+    cur.executemany("""UPDATE questions
                        SET close_likelihood = %s
                        WHERE post_id = %s
-                    """, [str(prob), str(question_id)])
+                    """, [(str(prob), str(question_id)) for question_id, prob in zip(question_ids, prob_closed)])
+
+    print("Ran executemany")
+
     conn.commit()
 
+    print("committing")
+
+    conn.close()
+    print("closing")
+
 def get_questions_from_postgres():
-    conn = psycopg2.connect('dbname=stack user=postgres password=sx7%8rBSgB3SPuytB535')
+    conn = connect_to_postgres()
     cur = conn.cursor()
     cur.execute("""SELECT post_id,
                           post_creation_date,
